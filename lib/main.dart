@@ -50,14 +50,14 @@ class _MyHomePageState extends State<MyHomePage> {
           context: context,
           builder: (context) {
             return AlertDialog(
-              title: Text("Error"),
+              title: const Text("Error"),
               content: Text(error.toString()),
               actions: [
                 TextButton(
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child: Text("OK"))
+                    child: const Text("OK"))
               ],
             );
           },
@@ -94,7 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     future: response,
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) {
-                        return Center(
+                        return const Center(
                             child: SizedBox(
                                 width: 32, child: CircularProgressIndicator()));
                       }
