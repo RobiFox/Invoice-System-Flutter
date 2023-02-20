@@ -45,6 +45,24 @@ class _MyHomePageState extends State<MyHomePage> {
       products = [];
     });
     response = http.get(Uri.parse(Constants.urlProducts))
+      ..catchError((error) {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text("Error"),
+              content: Text(error.toString()),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text("OK"))
+              ],
+            );
+          },
+        );
+      })
       ..then((value) => {
             setState(() {
               List<dynamic> list = List.from(jsonDecode(value.body));
@@ -76,7 +94,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     future: response,
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) {
-                        return const CircularProgressIndicator();
+                        return Center(
+                            child: SizedBox(
+                                width: 32, child: CircularProgressIndicator()));
                       }
                       if (snapshot.hasError) {
                         return const Icon(Icons.error);
@@ -96,12 +116,16 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: ElevatedButton(
                     onPressed: () async {
                       List<int> ids = [];
-                      for(Product p in products) {
-                        if(p.checked) ids.add(p.id);
+                      for (Product p in products) {
+                        if (p.checked) ids.add(p.id);
                       }
-                      http.get(Uri.parse("${Constants.urlInvoice}?id=${ids.join(",")}")).then((value) async {
-                        var uri = Uri.parse(jsonDecode(value.body)[Constants.invoiceRedirectUrl]);
-                        if(!await canLaunchUrl(uri)) {
+                      http
+                          .get(Uri.parse(
+                              "${Constants.urlInvoice}?id=${ids.join(",")}"))
+                          .then((value) async {
+                        var uri = Uri.parse(jsonDecode(
+                            value.body)[Constants.invoiceRedirectUrl]);
+                        if (!await canLaunchUrl(uri)) {
                           return;
                         }
                         launchUrl(uri);
