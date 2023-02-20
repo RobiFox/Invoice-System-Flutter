@@ -121,7 +121,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       }
                       http
                           .get(Uri.parse(
-                              "${Constants.urlInvoice}?id=${ids.join(",")}"))
+                              Constants.urlInvoice).replace(queryParameters: {Constants.paramInvoiceIds: ids.join(",")}))
                           .then((value) async {
                         var uri = Uri.parse(jsonDecode(
                             value.body)[Constants.invoiceRedirectUrl]);
